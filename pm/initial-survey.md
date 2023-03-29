@@ -30,9 +30,9 @@ Uses [non-membership 🚫](#non-membership)
 
 ### Private Safes
 
-Many projects use safes like [Safe (formerly Gnosis Safe)](https://safe.global/) to safely control funds split between multiple parties. Generally this means using your personal key to sign votes for how the money is spent, those votes are then sent to the chain and executed when enough parties agree. However, this means publicly linking your personal finances to some project, which is generally not desirable. Instead of sending a publicly readable signature, the user can send a ZKP proving their vote without revealing their identity onchain. [zkShield](https://blog.ethereum.org/2023/02/14/layer-2-grants-roundup#:~:text=%F0%9F%91%A8%E2%80%8D%F0%9F%92%BB%20User%20Experience-,Spiro%20%2D%20zkWallet,-Multi%2Dparty%20wallets) is an example of a private safe in development (TODO: link actual project).
+Many projects use safes like [Safe (formerly Gnosis Safe)](https://safe.global/) to safely control funds split between multiple parties. Generally this means using your personal key to sign votes for how the money is spent, those votes are then sent to the chain and executed when enough parties agree. However, this means publicly linking your personal finances to some project, which is generally not desirable. Instead of sending a publicly readable signature, the user can send a ZKP proving their vote without revealing their identity onchain. [zkShield](https://github.com/bankisan/zkShield) is an example of a private safe in development.
 
-Uses [nullifiers 🪶](#nullifiers)
+Note, this is the only financial application on this list that doesn't require nullifiers. This is because there is no notion of double spending, and the users only need privacy from one another, not from outsiders.
 
 ### Private Voting
 
@@ -47,10 +47,6 @@ Many projects, such as [Arbitrum](TODO) and [ENS](TODO) have introduced a govern
 Note, airdrop usually offer granular rewards, giving more tokens to earlier users, etc. Unfortunately, high granularity would reduce the anonymity set. The easiest implementation would be if every address recieved the same amount, however you could probably mitigate the loss of privacy while allowing different rewards by letting people claim the airdrop for multiple addresses at a time, and offering multiple rewards per address, though this would introduce additional complexity in the circuit.
 
 Uses [nullifiers 🪶](#nullifiers)
-
-### Relays
-
-One persistent difficulty in using Ethereum privately is not having enough money for gas fees for a new privately generated address. We can build a relay on top of a [mixer](#mixers) by wrapping the mixer's withdraw method with a method to pay the relayer. That way, a user wouldn't send a transaction to the blockchain to call a function, they would generate a proof that they can withdraw funds from the mixer, and that they are willing to pay the relayer a certain amount of Eth to call a given contract with given parameters. Note, this has issues around TODO(complete)
 
 ### Private NFTs
 
