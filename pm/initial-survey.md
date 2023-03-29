@@ -6,7 +6,7 @@ Unfortunately, to achieve neutrality, it has sacrificed privacy because every tr
 
 Broadly speaking, dApps work by verifying [ECDSA signatures](https://en.wikipedia.org/wiki/Elliptic_Curve_Digital_Signature_Algorithm) on transactions then executing smart contract logic. Instead, we can verify ECDSA signatures and execute arbitrary logic inside ZKPs, then verify those proofs onchain, then execute our smart contract logic. Thus, without any change to Ethereum itself, we can support privacy where users want it.
 
-This blog was written as part of a grant from the Ethereum Foundation's Privacy and Scaling Explorations team. My mandate was to explore zk-ECDSA, build applications with zk-ECDSA, and contribute to ZKPs to make this vision come true.
+This blog was written as part of a grant from the Ethereum Foundation's [Privacy and Scaling Explorations team](https://appliedzkp.org/). My mandate was to explore zk-ECDSA, build applications with zk-ECDSA, and contribute to ZKPs to make this vision come true.
 
 ## Use Cases
 
@@ -24,15 +24,15 @@ Financial privacy is good, but it can have downsides. The US Treasury [accused T
 
 There may be a middle ground, where privacy is preserved for normal users, but authorities can prevent hackers recieving their funds. The following is not an ideal scheme, as it gives authorities power to freeze funds of law abiding citizens, but it is a start.
 
-In order to get your funds out of a compliant mixed, you must prove in a ZKP that you own an address that deposited funds, has not already retrieved their funds, and *does not belong to a blacklist*. This means having to that inside the ZKP you must provide a proof of non-membership, which is explained [below](#non-membersip)
+In order to get your funds out of a compliant mixer, you must prove in a ZKP that you own an address that deposited funds, has not already retrieved their funds, and *does not belong to a blacklist*. This means having to that inside the ZKP you must provide a proof of non-membership, which is explained [below](#non-membersip)
 
 Uses [non-membership 🚫](#non-membership)
 
 ### Private Safes
 
-Many projects use safes like [Safe (formerly Gnosis Safe)](https://safe.global/) to safely control funds split between multiple parties. Generally this means using your personal key to sign votes for how the money is spent, those votes are then sent to the chain and executed when enough parties agree. However, this means publicly linking your personal finances to some project, which is generally not desirable. Instead of sending a publicly readable signature, the user can send a ZKP proving their vote without revealing their identity onchain. [zkShield](https://github.com/bankisan/zkShield) is an example of a private safe in development.
+Many projects use safes like [Safe](https://safe.global/) (formerly Gnosis Safe) to safely control funds split between multiple parties. Generally this means using your personal key to sign votes for how the money is spent, those votes are then sent to the chain and executed when enough parties agree. However, this means publicly linking your personal finances to some project, which is generally not desirable. Instead of sending a publicly readable signature, the user can send a ZKP proving their vote without revealing their identity onchain. [zkShield](https://github.com/bankisan/zkShield) is an example of a private safe in development.
 
-Note, this is the only financial application on this list that doesn't require nullifiers. This is because there is no notion of double spending, and the users only need privacy from one another, not from outsiders.
+It may be suprising that we don't need nullifiers for safes. If you wanted to keep your votes private from other owners of the same safe you would need nullifiers. However, people sharing a safe are generally cooperative, so the sensible approach in zkShield is to create non-privacy-preserving signatures offchain with [efficient-ecdsa](#onchain-no-nullifiers), and verify them in a ZKP. Nullifiers are also often used in financial applications to prevent double-spending, but that is irrelevant here because safes don't have an inbuilt payment system.
 
 ### Private Voting
 
