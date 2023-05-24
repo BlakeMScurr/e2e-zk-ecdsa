@@ -2,7 +2,6 @@ import { faker } from '@faker-js/faker'
 import { Container } from 'typedi'
 import { DuneRepository, GraphRepository } from '@repositories'
 import { QueryService } from '@services'
-
 import { Db } from '~/bigquery'
 
 describe('Service', () => {
@@ -35,9 +34,12 @@ describe('Service', () => {
       jest
         .spyOn(DuneRepository.prototype, 'queryErc20Balance')
         .mockResolvedValueOnce({
-          columns: [],
-          data: addresses.map((address) => ({ address })),
+          // @ts-expect-error
+          result: {
+            rows: addresses.map((address) => ({ address })),
+          },
         })
+
       await expect(
         queryService.getErc20BalanceAnonSet({ min, tokenAddress }),
       ).resolves.toMatchObject(addresses)
@@ -45,8 +47,14 @@ describe('Service', () => {
 
     it('deposited into the Beacon Contract', async () => {
       jest
-        .spyOn(GraphRepository.prototype, 'getBeaconDepositors')
-        .mockResolvedValueOnce(addresses)
+        .spyOn(DuneRepository.prototype, 'queryBeaconDepositors')
+        .mockResolvedValueOnce({
+          // @ts-expect-error
+          result: {
+            rows: addresses.map((address) => ({ address })),
+          },
+        })
+
       await expect(queryService.getBeaconDepositors()).resolves.toMatchObject(
         addresses,
       )
@@ -56,6 +64,7 @@ describe('Service', () => {
       jest
         .spyOn(GraphRepository.prototype, 'getPunkOwners')
         .mockResolvedValueOnce(addresses)
+
       await expect(queryService.getPunkOwners()).resolves.toMatchObject(
         addresses,
       )
@@ -65,6 +74,7 @@ describe('Service', () => {
       jest
         .spyOn(GraphRepository.prototype, 'getEnsProposalVoters')
         .mockResolvedValueOnce(addresses)
+
       await expect(
         queryService.getEnsProposalVoters({
           choice: 'FOR',

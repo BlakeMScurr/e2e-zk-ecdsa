@@ -32,16 +32,16 @@ export class QueryService {
   }: getErc20BalanceAnonSetQuery) {
     return this.duneRepository
       .queryErc20Balance({ min, tokenAddress })
-      .then(({ data }) => {
+      .then(({ result }) => {
         this.logger.info('Get ERC20-balance based anonymity set')
-        return data.map((row) => row.address)
+        return result?.rows?.map((row) => row.address) ?? []
       })
   }
 
   async getBeaconDepositors() {
-    return this.graphRepository.getBeaconDepositors().then((result) => {
+    return this.duneRepository.queryBeaconDepositors().then(({ result }) => {
       this.logger.info('Get Beacon Contract Depositors anonymity set')
-      return result
+      return result?.rows?.map((row) => row.address) ?? []
     })
   }
 

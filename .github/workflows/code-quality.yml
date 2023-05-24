@@ -2,6 +2,7 @@ name: Code Quality
 on:
   pull_request:
     branches: [main, staging]
+    paths-ignore: ['**/Dockerfile']
 
 jobs:
   lint-format:
@@ -36,7 +37,10 @@ jobs:
           restore-keys: ${{ runner.os }}-pnpm-store-
 
       - name: Install
-        run: pnpm i --ignore-scripts
+        run: pnpm i --ignore-scripts --no-frozen-lockfile
 
-      - name: Validate (Lint & Format)
+      - name: Build membership to get its types
+        run: pnpm --filter @anonset/membership run build
+
+      - name: Validate (Lint, Format, Typecheck)
         run: pnpm run validate

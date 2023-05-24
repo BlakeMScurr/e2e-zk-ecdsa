@@ -6,7 +6,7 @@ import {
   fetchErc20AnonSet,
   fetchEthAnonSet,
   fetchPunksAnonSet,
-} from '../fetch-anon-set'
+} from '../fetch-anonset'
 import { logResult } from './log-result'
 import {
   AnonSetLocation,
@@ -59,6 +59,7 @@ export const cli = async () => {
           }
           break
         }
+
         case AnonSetLocation.FILE: {
           const path = await askAddressesFile()
           const { default: _addresses } = await import(path)
